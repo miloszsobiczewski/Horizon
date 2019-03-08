@@ -1,0 +1,16 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Milosz</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <h1>milosz.sobiczewski</h1>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
+

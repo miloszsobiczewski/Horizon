@@ -1,0 +1,193 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>milosz.sobiczewski</title>
+
+    <!-- Bootstrap core CSS-->
+    <link href="{% static '/horizon/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static '/horizon/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- Page level plugin CSS-->
+    <link href="{% static '/horizon/vendor/datatables/dataTables.bootstrap4.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{% static '/horizon/css/sb-admin.css' %}" rel="stylesheet">
+
+  </head>
+
+  <body id="page-top">
+
+    <div id="wrapper">
+
+      <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+          <div class="breadcrumb">
+            <h1>
+                ____________________________
+                <img src="{% static '/horizon/svgs/brands/galactic-republic.svg' %}" height="40"/>
+                [H]orizon
+                <img src="{% static '/horizon/svgs/brands/jedi-order.svg' %}" height="40"/>
+                ____________________________
+            </h1>
+          </div>
+          <p>
+            <img src="{% static '/horizon/svgs/brands/firefox.svg' %}" height="20"/>
+            server run on firefox (selenium geckodriver)
+            <img src="{% static '/horizon/svgs/brands/firefox.svg' %}" height="20"/>
+          </p>
+            <div class="breadcrumb">
+            {% if log %}
+                <center>{{ log }}</center>
+            {% endif %}
+            </div>
+
+          <!--Raport Generation-->
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card mb-3">
+                <div class="card-header">
+                  <i class="fas fa-chart-bar"></i>
+                  Search form</div>
+                <div class="card-body">
+                  <!--<canvas id="myBarChart" width="100" height="20"></canvas>-->
+                  <form class="site-from" method="post">
+                    {% csrf_token %}
+                    {{ propertiesform }}
+                    <input type="submit" value="Run" name="Run"/>
+                  </form>
+                </div>
+                  <div class="card-footer small text-muted">
+                    <form class="site-form" action="{% url 'horizon' %}" method="post" id="Run">
+                      {% csrf_token %}
+                      <!--<button type="submit" form="Run" name="Done" value="run">Default Run</button>-->
+                      <button type="submit" form="Run" name="Send" value="send">Send Report</button>
+                      <button type="submit" form="Run" name="Results" value="results" disabled>Filter Results</button>
+                      <button type="submit" form="Run" name="Refresh" value="refresh">Refresh Page</button>
+                      <button type="submit" form="Run" name="Logs" value="logs">View Logs</button>
+                    </form>
+                  </div>
+              </div>
+            </div>
+          </div>
+            <p><b>Przeszukujemy wioski: </b><i>{{ villages_in }}</i></p>
+            <p><b>Wykluczamy wioski: </b><i>{{ villages_out }}</i></p>
+
+            <!--Table block-->
+          <div class="main-black-window">
+              <div id="content-wrapper">
+
+                <div class="container-fluid">
+
+                  <form class="thick-form" action="{% url 'horizon' %}" method="post" id="GetLike">
+                  {% csrf_token %}
+
+                  <!-- DataTables -->
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <i class="fas fa-table"></i>
+                      Scrapped Data</div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                          <thead>
+                            <tr>
+                      <th>Location</th>
+                      <th>Type</th>
+                      <th>Size [ m² ]</th>
+                      <th>Total Price [ zł ]</th>
+                      <th>Unit Price [ zł / m² ]</th>
+                      <th>Offer Link</th>
+                      <th>Generation Date</th>
+                      <th>Like</th>
+                            </tr>
+                          </thead>
+                          <tfoot>
+                            <tr>
+                      <th>Location</th>
+                      <th>Type</th>
+                      <th>Size</th>
+                      <th>Total Price</th>
+                      <th>Unit Price</th>
+                      <th>Offer Link</th>
+                      <th>Generation Date</th>
+                      <th>Like</th>
+                            </tr>
+                          </tfoot>
+                          <tbody>
+
+                                {% for property in properties %}
+                                    <tr>
+                                      <td><b>[{{ property.location }}]</b></td>
+                                      <td>{{ property.type }}</td>
+                                      <td>{{ property.size }}</td>
+                                      <td>{{ property.total_price }}</td>
+                                      <!--<td>{{ property.phone }}</td>-->
+                                      <td>{{ property.unit_price }}</td>
+                                      <td><a href="{{ property.link }}">link</a></td>
+                                      <td>(({{ property.date }}))</td>
+                                      <td>
+                                         {% if property.like %}
+                                            <button type="submit" form="GetLike" name="Like" value="{{ property.id }}">
+                                                <i class="fas fa-thumbs-up" style="color:green"></i>
+                                            </button>
+                                         {% else %}
+                                            <button type="submit" form="GetLike" name="Like" value="{{ property.id }}">
+                                                <i class="fas fa-thumbs-down" style="color:red"></i>
+                                            </button>
+                                         {% endif %}
+                                      </td>
+                                    </tr>
+                                {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="card-footer small text-muted">by MSobiczewski</div>
+                  </div>
+                  </form>
+
+                <div>
+        <!-- /.container-fluid -->
+          </div>
+        </div>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- /.content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static '/horizon/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static '/horizon/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static '/horizon/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <!-- Page level plugin JavaScript-->
+    <script src="{% static '/horizon/vendor/chart.js/Chart.min.js' %}"></script>
+    <script src="{% static '/horizon/vendor/datatables/jquery.dataTables.js' %}"></script>
+    <script src="{% static '/horizon/vendor/datatables/dataTables.bootstrap4.js' %}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin.min.js"></script>
+
+    <!-- Demo scripts for this page-->
+    <script src="{% static '/horizon/js/demo/datatables-demo.js' %}"></script>
+    <script src="{% static '/horizon/js/demo/chart-area-demo.js' %}"></script>
+
+  </body>
+
+</html>

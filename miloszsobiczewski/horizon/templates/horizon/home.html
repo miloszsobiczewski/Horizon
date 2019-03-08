@@ -1,0 +1,142 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>[H]orizon</title>
+</head>
+<body>
+    <h1>
+        <img src="{% static '/horizon/svgs/brands/galactic-republic.svg' %}" height="40"/>
+        [H]orizon
+        <img src="{% static '/horizon/svgs/brands/jedi-order.svg' %}" height="40"/>
+    </h1>
+    <p><img src="{% static '/horizon/svgs/brands/firefox.svg' %}" height="20"/> firefox support only</p>
+    <p>resolution 1600 x 900</p>
+    {% if log %}
+        <p>{{ log }}</p>
+    {% endif %}
+    <!--<input type="button" value="run" name="Run">-->
+
+    <h3>Scrap conditions</h3>
+
+    <form class="site-from" method="post">
+        {% csrf_token %}
+        {{ propertiesform }}
+    <input type="submit" value="Run"/>
+    </form>
+
+    <p></p>
+
+    <form class="run-morizon" action="{% url 'horizon' %}" method="post" id="Run">
+        {% csrf_token %}
+        <button type="submit" form="Run" name="Done" value="run">
+            Run
+        </button>
+    </form>
+
+    <h3>Check results</h3>
+
+    <p>
+        <img src="{% static '/horizon/svgs/solid/map-marker-alt.svg' %}" height="16"/> - <b>[location]</b>
+        <img src="{% static '/horizon/svgs/solid/circle-notch.svg' %}" height="16"/> - size
+        <img src="{% static '/horizon/svgs/solid/dollar-sign.svg' %}" height="16"/> - price
+        <img src="{% static '/horizon/svgs/solid/money-bill-alt.svg' %}" height="16"/> - unit_price
+        <img src="{% static '/horizon/svgs/solid/mobile-alt.svg' %}" height="16"/> - phone
+        <img src="{% static '/horizon/svgs/solid/feather-alt.svg' %}" height="16"/> - link
+        <img src="{% static '/horizon/svgs/solid/calendar-alt.svg' %}" height="16"/> - (( date ))
+    </p>
+
+    <form class="run-morizon" action="{% url 'horizon' %}" method="post" id="Run">
+        {% csrf_token %}
+        <button type="submit" form="Run" name="Done" value="run">
+            Retreive results
+        </button>
+    </form>
+
+
+    {% for property in properties %}
+        <p>
+            <img src="{% static '/horizon/svgs/solid/map-marker-alt.svg' %}" height="16"/><b> [{{ property.title }}]</b>
+            <img src="{% static '/horizon/svgs/solid/circle-notch.svg' %}" height="16"/> {{ property.desc }}
+            <img src="{% static '/horizon/svgs/solid/dollar-sign.svg' %}" height="16"/> {{ property.price }}
+            <img src="{% static '/horizon/svgs/solid/money-bill-alt.svg' %}" height="16"/> {{ property.subtitle }}
+            <!--<img src="{% static '/horizon/svgs/solid/mobile-alt.svg' %}" height="16"/> {{ property.phone }}-->
+            <img src="{% static '/horizon/svgs/solid/feather-alt.svg' %}" height="16"/><a href="{{ property.link }}"> link</a>
+            <img src="{% static '/horizon/svgs/solid/calendar-alt.svg' %}" height="16"/> (( {{ property.date }} ))
+        </p>
+    {% endfor %}
+
+      <div class="main-black-window">
+      <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+          <!-- DataTables Example -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <i class="fas fa-table"></i>
+              Data Table Example</div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Position</th>
+                      <th>Office</th>
+                      <th>Age</th>
+                      <th>Start date</th>
+                      <th>Salary</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>Name</th>
+                      <th>Position</th>
+                      <th>Office</th>
+                      <th>Age</th>
+                      <th>Start date</th>
+                      <th>Salary</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    <tr>
+                      <td>Tiger Nixon</td>
+                      <td>System Architect</td>
+                      <td>Edinburgh</td>
+                      <td>61</td>
+                      <td>2011/04/25</td>
+                      <td>$320,800</td>
+                    </tr>
+                    <tr>
+                      <td>Garrett Winters</td>
+                      <td>Accountant</td>
+                      <td>Tokyo</td>
+                      <td>63</td>
+                      <td>2011/07/25</td>
+                      <td>$170,750</td>
+                    </tr>
+                    <tr>
+                      <td>Ashton Cox</td>
+                      <td>Junior Technical Author</td>
+                      <td>San Francisco</td>
+                      <td>66</td>
+                      <td>2009/01/12</td>
+                      <td>$86,000</td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+          </div>
+
+        </div>
+        <!-- /.container-fluid -->
+  </div>
+
+</body>
+</html>
